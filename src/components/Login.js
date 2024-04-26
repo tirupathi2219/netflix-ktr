@@ -1,15 +1,35 @@
 import { validation } from "../utils/validation"
 import Header from "./Header"
 import { useRef, useState } from "react"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
   const email = useRef(null)
   const password = useRef(null)
   const [error, setError] = useState(null)
   const [isSignUpForm, setIsSignUpForm] = useState(false)
   const handleLogin = () => {
-    const val = validation(email, password)
+    const message = validation(email, password)
     console.log(val)
-    setError(val)
+    setError(message)
+    if(message) return;
+    if(isSignUpForm) {
+
+createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
+    } else {
+
+    }
+
+    //sign in/ sign up
   }
   return <div className="">
     <Header />
