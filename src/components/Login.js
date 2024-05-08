@@ -1,6 +1,6 @@
 import { validation } from "../utils/validation"
 import Header from "./Header"
-import { useRef, useState, useRef } from "react"
+import { useRef, useState} from "react"
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
   const email = useRef(null)
@@ -16,10 +16,11 @@ const Login = () => {
     if(message) return;
     if(isSignUpForm) {
 
-createUserWithEmailAndPassword(auth, email, password)
+createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
+    console.log('23:::', user)
     // ...
   })
   .catch((error) => {
@@ -28,7 +29,16 @@ createUserWithEmailAndPassword(auth, email, password)
     // ..
   });
     } else {
-
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
     }
 
     //sign in/ sign up
