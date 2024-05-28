@@ -1,22 +1,36 @@
-import { validation } from "../utils/validation"
+import React,{useEffect} from "react"
+import { validation } from "../utils/validation";
 import Header from "./Header"
+<<<<<<< HEAD
 import { useRef, useState, useEffect  } from "react"
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import {auth} from '../utils/firebase'
+=======
+import { useRef, useState} from "react"
+import {auth} from '../utils/firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom"
+>>>>>>> 8f21634999c0c40d65e87b3436a96ebeaab3c37d
 const Login = () => {
   const email = useRef(null)
   const password = useRef(null)
   const [error, setError] = useState(null)
   const [isSignUpForm, setIsSignUpForm] = useState(false)
   const [imgUrl, setImgUrl] = useState('https://assets.nflxext.com/ffe/siteui/vlv3/c1366fb4-3292-4428-9639-b73f25539794/3417bf9a-0323-4480-84ee-e1cb2ff0966b/IN-en-20240408-popsignuptwoweeks-perspective_alpha_website_medium.jpg')
-
+const navigate= useNavigate()
   const handleLogin = () => {
     const message = validation(email, password)
     setError(message)
     if(message) return;
     if(isSignUpForm) {
+<<<<<<< HEAD
  
 createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+=======
+
+createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+// console.log('23:::', auth)
+>>>>>>> 8f21634999c0c40d65e87b3436a96ebeaab3c37d
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
@@ -29,7 +43,17 @@ createUserWithEmailAndPassword(auth, email.current.value, password.current.value
     // ..
   });
     } else {
-
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        navigate('/browser')
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
     }
 
     //sign in/ sign up
@@ -61,10 +85,10 @@ createUserWithEmailAndPassword(auth, email.current.value, password.current.value
     
     <form onSubmit={(e) => { e.preventDefault() }} className=" w-4/12 absolute my-36 mx-auto left-0 right-0 bg-black text-center bg-opacity-80">
       <h1 className="text-white">{isSignUpForm ? 'Sign Up' : 'Sign In'}</h1>
-      {error && <p> {error} </p>}
-      {isSignUpForm && <input type="text" placeholder="Full Name" className='p-2 m-2 block rounded-md bg-gray-800 w-full' />}
-      <input ref={email} type='text' placeholder='Email Address' className='p-2 m-2 block rounded-md bg-gray-800 w-full' />
-      <input ref={password} type='password' placeholder='Password' className='p-2 m-2 block rounded-md bg-gray-800 w-full ' />
+      {error && <p className="text-white"> {error} </p>}
+      {isSignUpForm && <input type="text" placeholder="Full Name" className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full' />}
+      <input ref={email} type='text' placeholder='Email Address' className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full' />
+      <input ref={password} type='password' placeholder='Password' className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full ' />
       <div>
         <button type='submit' className="p-2 bg-red-800 w-full rounded-md" onClick={handleLogin}>Submit</button>
       </div>
