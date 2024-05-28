@@ -1,16 +1,10 @@
 import React,{useEffect} from "react"
 import { validation } from "../utils/validation";
 import Header from "./Header"
-<<<<<<< HEAD
-import { useRef, useState, useEffect  } from "react"
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import {auth} from '../utils/firebase'
-=======
 import { useRef, useState} from "react"
 import {auth} from '../utils/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom"
->>>>>>> 8f21634999c0c40d65e87b3436a96ebeaab3c37d
 const Login = () => {
   const email = useRef(null)
   const password = useRef(null)
@@ -23,14 +17,9 @@ const navigate= useNavigate()
     setError(message)
     if(message) return;
     if(isSignUpForm) {
-<<<<<<< HEAD
- 
-createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
-=======
 
 createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
 // console.log('23:::', auth)
->>>>>>> 8f21634999c0c40d65e87b3436a96ebeaab3c37d
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
