@@ -1,7 +1,8 @@
 import { validation } from "../utils/validation"
 import Header from "./Header"
-import { useRef, useState, useRef } from "react"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useRef, useState, useEffect  } from "react"
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import {auth} from '../utils/firebase'
 const Login = () => {
   const email = useRef(null)
   const password = useRef(null)
@@ -11,12 +12,11 @@ const Login = () => {
 
   const handleLogin = () => {
     const message = validation(email, password)
-    console.log(val)
     setError(message)
     if(message) return;
     if(isSignUpForm) {
-
-createUserWithEmailAndPassword(auth, email, password)
+ 
+createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
@@ -25,6 +25,7 @@ createUserWithEmailAndPassword(auth, email, password)
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
+    setError(errorCode + "-" + errorMessage)
     // ..
   });
     } else {
