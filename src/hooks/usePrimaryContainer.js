@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {API_options} from '../utils/constants'
+import { useDispatch, useSelector } from 'react-redux';
+import { getNowPlayingMovies } from '../redux/slice/movieList';
 
 const usePrimaryContainer = () => {
-    const [moviesList, setMovieslist] = useState();
+  const movies = useSelector((state) => state.movies )
+    const dispatch = useDispatch();
     useEffect(() => {
           fetch('https://api.themoviedb.org/3/discover/movie', API_options)
             .then(response => response.json())
-            .then(response => console.log("api response", response))
+            .then(response => dispatch(getNowPlayingMovies(response.results)))
             .catch(err => console.error(err));
 
     },[])
   return {
-    movies: []
+    movies: movies
   }
 }
 
