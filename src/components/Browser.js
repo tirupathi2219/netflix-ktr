@@ -1,8 +1,13 @@
 import React from 'react'
+import PrimaryContanier from './PrimaryContanier'
+import SecondaryContainer from './SecondaryContainer'
 
 const Browser = () => {
   return (
-    <div>Browser</div>
+   <div>
+   <PrimaryContanier />
+   <SecondaryContainer />
+   </div>
   )
 }
 
