@@ -1,20 +1,22 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {API_options} from '../utils/constants'
-import { useDispatch, useSelector } from 'react-redux';
-import { getNowPlayingMovies } from '../redux/slice/movieList';
+import { useDispatch } from 'react-redux';
 
-const usePrimaryContainer = () => {
-  const movies = useSelector((state) => state.movies )
-    const dispatch = useDispatch();
+const usePrimaryContainer = (movies) => {
+const [trailers, setTrailers] = useState([])
+  // const dispatch = useDispatch();
+    const movieId = movies[0]?.id
     useEffect(() => {
-          fetch('https://api.themoviedb.org/3/discover/movie', API_options)
-            .then(response => response.json())
-            .then(response => dispatch(getNowPlayingMovies(response.results)))
-            .catch(err => console.error(err));
+      if(movieId) {
+        fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`, API_options)
+        .then(response => response.json())
+        .then(response =>setTrailers(response.results))
+        .catch(err => console.error(err));
+      }
 
-    },[])
+    },[movieId])
   return {
-    movies: movies
+trailers
   }
 }
 
