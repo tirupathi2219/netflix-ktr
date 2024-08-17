@@ -10,7 +10,6 @@ const useGetMovies = () => {
           fetch('https://api.themoviedb.org/3/movie/now_playing?page=1&region=IN', API_options)
             .then(response => response.json())
             .then(response =>{ 
-              console.log("::: api")
               dispatch(getNowPlayingMovies(response.results))})
             .catch(err => console.error(err));
 
