@@ -14,4 +14,4 @@ const movieList = createSlice({
 })
 
 export const { getNowPlayingMovies } = movieList.actions
-export { movieList }
+export default movieList.reducer ;

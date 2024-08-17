@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 const PrimaryContanier = () => {
   const movies = useSelector((state) => state.movies)
     const {trailers} = usePrimaryContainer(movies)
-  const teaser = trailers.filter((item) =>  item.type === "Teaser")[0]
+  const teaser = trailers?.filter((item) =>  item.type === "Teaser")[0]
   return (
  <div className=''>
  <iframe src={`https://www.youtube.com/${teaser}`}>
