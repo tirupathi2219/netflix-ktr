@@ -1,9 +1,17 @@
 import React from 'react'
-import Header from './Header'
+import PrimaryContanier from './PrimaryContanier';
+import SecondaryContainer from './SecondaryContainer';
+import useGetMovies from '../hooks/useGetMovies';
+import Header from './Header';
 
 const Browser = () => {
+  useGetMovies()
   return (
-    <div><Header /></div>
+   <div>
+    <Header />
+   <PrimaryContanier />
+   <SecondaryContainer />
+   </div>
   )
 }
 
