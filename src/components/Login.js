@@ -1,51 +1,59 @@
-import React,{useEffect} from "react"
+import React, { useEffect } from "react"
+import puppeteer from "puppeteer";
 import { validation } from "../utils/validation";
 import Header from "./Header"
-import { useRef, useState} from "react"
-import {auth} from '../utils/firebase'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRef, useState } from "react"
+import { auth } from '../utils/firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../utils/userSlice";
 const Login = () => {
   const email = useRef(null)
   const password = useRef(null)
+  const username = useRef(null)
   const [error, setError] = useState(null)
   const [isSignUpForm, setIsSignUpForm] = useState(false)
+  const user = useSelector((state) => state.user)
   const [imgUrl, setImgUrl] = useState('https://assets.nflxext.com/ffe/siteui/vlv3/c1366fb4-3292-4428-9639-b73f25539794/3417bf9a-0323-4480-84ee-e1cb2ff0966b/IN-en-20240408-popsignuptwoweeks-perspective_alpha_website_medium.jpg')
-const navigate= useNavigate()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const tableRef = useRef(null)
   const handleLogin = () => {
     const message = validation(email, password)
     setError(message)
-    if(message) return;
-    if(isSignUpForm) {
+    if (message) return;
+    if (isSignUpForm) {
 
-createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
-// console.log('23:::', auth)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setError(errorCode + "-" + errorMessage)
-    // ..
-  });
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: username.current.value,
+          }).then(() => {
+            const { uid, email, displayName } = auth.currentUser
+            dispatch(addUser({ uid: uid, email: email, displayName: displayName }))
+            // navigate('/browser')
+          })
+
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setError(errorCode + "-" + errorMessage)
+        });
     } else {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
-      .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        navigate('/browser')
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+        .then((userCredential) => {
+          const user = userCredential.user;
+          // navigate('/browser')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
     }
 
-    //sign in/ sign up
   }
   useEffect(() => {
     function testImage(URL) {
@@ -66,16 +74,32 @@ createUserWithEmailAndPassword(auth, email.current.value, password.current.value
 
     testImage("https://assets.nflxext.com/ffe/siteui/vlv3/c1366fb4-3292-4428-9639-b73f25539794/3417bf9a-0323-4480-84ee-e1cb2ff0966b/IN-en-20240408-popsignuptwoweeks-perspective_alpha_website_medium.jpg");
   }, [])
-  return <div className="">
+  const handleExportpdf = async(tabRef) => {
+    const input = tabRef.current
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(input);
+    await page.pdf({ 
+        path: 'table.pdf',
+        format: 'A3',
+        landscape: true,
+        printBackground: true,
+        scale: 0.5 // Adjust scale as needed
+    });
+
+    await browser.close();
+  }
+  return<> 
+  {/* <div className="">
     <Header />
     <div className="absolute">
       <img src={imgUrl} alt='bg' />
     </div>
-    
+
     <form onSubmit={(e) => { e.preventDefault() }} className=" w-4/12 absolute my-36 mx-auto left-0 right-0 bg-black text-center bg-opacity-80">
       <h1 className="text-white">{isSignUpForm ? 'Sign Up' : 'Sign In'}</h1>
       {error && <p className="text-white"> {error} </p>}
-      {isSignUpForm && <input type="text" placeholder="Full Name" className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full' />}
+      {isSignUpForm && <input ref={username} type="text" placeholder="Full Name" className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full' />}
       <input ref={email} type='text' placeholder='Email Address' className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full' />
       <input ref={password} type='password' placeholder='Password' className='p-2 m-2 block rounded-md text-white bg-gray-800 w-full ' />
       <div>
@@ -83,6 +107,44 @@ createUserWithEmailAndPassword(auth, email.current.value, password.current.value
       </div>
       <p className="text-white" onClick={() => { setIsSignUpForm(!isSignUpForm) }}> {isSignUpForm ? "Already Have Account SignIn" : "Dont Have Account SignUp"}</p>
     </form>
-  </div>
+  </div> */}
+  <table ref={tableRef} style={{width: '1800px', position:'relative'}}>
+      <thead>
+        <tr>
+          <th>gggj</th>
+          <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th> <th>gggj</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+        <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+    <tr><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>gjjhg</td><td>happy</td></tr>
+
+      </tbody>
+    </table>
+    <button onClick={handleExportpdf(tableRef)}>submit</button>
+  </>
 }
 export default Login

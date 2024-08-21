@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Login from './Login'
 import Browser from './Browser'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
 
 const Body = () => {
   const appRouter = createBrowserRouter([
@@ -13,7 +13,7 @@ const Body = () => {
       path: "/browser",
       element: <Browser/>
     }
-  ])
+  ]);
   return (
     <div>
       <RouterProvider router={appRouter}/>
