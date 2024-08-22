@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 
 const SecondaryContainer = () => {
   const movies = useSelector((state) => state.movieList.movies)
-  console.log("7:::: movies", movies)
   return (
     <div className='bg-slate-900 text-white'>
       <h3>Now playing</h3>

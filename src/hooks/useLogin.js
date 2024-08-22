@@ -2,12 +2,9 @@ import { useEffect, useRef, useState } from "react"
 import { auth } from '../utils/firebase'
 import { validation } from "../utils/validation";
 import { useNavigate } from "react-router-dom"
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-import { useDispatch } from "react-redux";
-import { updateUserData } from "../redux/slice/user";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 const useLogin = () => {
-    const dispatch = useDispatch();
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
     const [error, setError] = useState(null)
@@ -15,19 +12,7 @@ const useLogin = () => {
     const [imgUrl, setImgUrl] = useState('https://assets.nflxext.com/ffe/siteui/vlv3/c1366fb4-3292-4428-9639-b73f25539794/3417bf9a-0323-4480-84ee-e1cb2ff0966b/IN-en-20240408-popsignuptwoweeks-perspective_alpha_website_medium.jpg')
     const navigate = useNavigate();
 
-    useEffect(() =>  {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log('18:::', user )
-                dispatch(updateUserData(user))
-            } else {
-                console.log("20::::  sign out s")
-            }
-          });
-      
-          // Cleanup subscription on unmount
-          return () => unsubscribe();
-    },[])
+   
    
     const handleLogin = () => {
         const message = validation(emailRef, passwordRef)

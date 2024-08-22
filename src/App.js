@@ -4,12 +4,12 @@ import appstore from "./utils/appStore";
 
 function App() {
 
-return (
-  <Provider store={appstore}> 
-  <Body />
-  </Provider>
+  return (
+    <Provider store={appstore}>
+      <Body />
+    </Provider>
 
-);
+  );
 }
 
 export default App;

@@ -1,5 +1,5 @@
-import { signOut } from 'firebase/auth';
-import React from 'react'
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import React, { useEffect } from 'react'
 import { auth } from '../utils/firebase';
 import { updateUserData } from '../redux/slice/user';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const  user = useSelector((state) => state.user.user )
+  console.log('10::: user ', user)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleUserSignIn = () => {
@@ -19,6 +20,20 @@ const Header = () => {
 
     });
   }
+  useEffect(() =>  {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+        
+        if (user) {
+            console.log("22::")
+            dispatch(updateUserData(user))
+        } else {
+            console.log("20::::  sign out s")
+        }
+      });
+  
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
+},[])
   return (
 
     <div className='absolute px-8 py-2 bg-gradient-to-b from-black w-full flex justify-between'>

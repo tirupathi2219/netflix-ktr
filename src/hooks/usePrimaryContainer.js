@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import {API_options} from '../utils/constants'
-import { useDispatch } from 'react-redux';
 
 const usePrimaryContainer = (movies) => {
 const [trailers, setTrailers] = useState([])
-  // const dispatch = useDispatch();
     const movieId = movies?.length ? movies[0]?.id : null
     useEffect(() => {
       if(movieId) {
