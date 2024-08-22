@@ -26,7 +26,7 @@ const Header = () => {
   {
     user && 
     <div>
-      
+    <img sr={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s`} alt='userImg' />
     <button onClick={handleUserSignIn} className='bg-sky-600'> Sign out </button>
     </div>
   }  
